@@ -5,9 +5,6 @@ function init() {
   // autosize canvas to window size
   ctx.canvas.width  = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
-
-  ctx.fillStyle = "#000000";
-  ctx.fillRect(100, 100, 500, 500);
 }
 
 document.addEventListener("DOMContentLoaded", init, false);
