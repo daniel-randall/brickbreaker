@@ -17,11 +17,6 @@ class Platform{
     }
 
     update(ctx, mouseX){
-      // update mouse location
-      // document.onmousemove = function(e){
-      //   this.x = e.clientX;
-      // }
-
       this.x = mouseX;
 
       if(this.x > ctx.canvas.width - (this.size / 2)) {
