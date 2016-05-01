@@ -71,7 +71,7 @@ function init() {
         mouseX = e.clientX;
       }
       update(canvas, ctx, mouseX, platform, bricks)
-    }, 80);
+    }, 17);
 }
 
 function update(canvas, ctx, mouseX, platform, bricks){
@@ -109,15 +109,8 @@ function Brick(health, x, y, ctx) {
     }
 
     this.update = function(ctx){
-
-        // create brick, fill it with its color
-        ctx.rect(this.xPosition, this.yPosition, this.width, this.height)
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.xPosition, this.yPosition, this.width, this.height);
-        // add stroke
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = "black";
-        ctx.stroke();
+        ctx.beginPath();
+        this.draw(ctx);
     }
 }
 
