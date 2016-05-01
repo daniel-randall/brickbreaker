@@ -68,7 +68,7 @@ function init() {
               bricks.push(b);
           }
       }
-      console.log("total number of bricks = " + bricks.length);
+      //console.log("total number of bricks = " + bricks.length);
     }, 30);
 }
 
