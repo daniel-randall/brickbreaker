@@ -17,7 +17,22 @@ class Platform{
     }
 
     update(ctx, mouseX){
-      this.x = mouseX;
+
+      var locX = mouseX
+
+      if(locX > ctx.canvas.width - (this.size / 2)) {
+          locX = ctx.canvas.width - (this.size / 2);
+      }
+      else if(locX < this.size / 2) {
+          locX = this.size / 2;
+      }
+      else{
+          //do nothing
+      }
+
+      locX = locX - (ctx.canvas.width / 5) / 2;
+
+      this.x = locX;
       ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
     }
 
@@ -45,21 +60,11 @@ function init() {
         mouseX = e.clientX;
       }
 
-      if(mouseX > canvas.width - (platform.size / 2)) {
-          mouseX = canvas.width - (platform.size / 2);
-      }
-      else if(mouseX < platform.size / 2) {
-          mouseX = platform.size / 2;
-      }
-      else{
-          //do nothing
-      }
-
       //clear the canvas
       ctx.clearRect(0,0,canvas.width, canvas.height);
 
       //draw stuff
-      platform.update(ctx, mouseX - (canvas.width / 5) / 2);
+      platform.update(ctx, mouseX);
       // draw all the bricks
       for (y = 0; y < numOfRows; y++) {
           for (x = 0; x < widthDivisor; x++) {
