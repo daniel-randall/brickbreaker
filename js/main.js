@@ -33,6 +33,7 @@ class Platform{
       locX = locX - (ctx.canvas.width / 5) / 2;
 
       this.x = locX;
+      ctx.fillStyle = "#000000";
       ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
     }
 
@@ -54,6 +55,12 @@ function init() {
 
     //create new platform and draw it
     var platform = new Platform(mouseX - (ctx.canvas.width / 5) / 2, ctx.canvas.width / 5, ctx);
+    platform.draw(ctx);
+
+    update(canvas, ctx, mouseX, platform, bricks);
+}
+
+function update(canvas, ctx, mouseX, platform, bricks){
 
     setInterval(function () {
       document.onmousemove = function(e){
@@ -63,8 +70,9 @@ function init() {
       //clear the canvas
       ctx.clearRect(0,0,canvas.width, canvas.height);
 
-      //draw stuff
+      //draw platform
       platform.update(ctx, mouseX);
+
       // draw all the bricks
       for (y = 0; y < numOfRows; y++) {
           for (x = 0; x < widthDivisor; x++) {
@@ -74,7 +82,8 @@ function init() {
           }
       }
       //console.log("total number of bricks = " + bricks.length);
-    }, 30);
+    }, 17);
+
 }
 
 function Brick(health, x, y, ctx) {
