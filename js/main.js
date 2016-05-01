@@ -8,6 +8,7 @@ function init() {
     
     //create new platform and draw it
     var platform = new Platform(100, 100, 150);
+    platform.draw(ctx);
 }
 
 document.addEventListener("DOMContentLoaded", init, false);
@@ -21,7 +22,7 @@ class Platform{
         const this.BOX_HEIGHT = 15;
     }
     
-    function drawPlatform(ctx){
+    function draw(ctx){
         ctx.fillStyle = "#afafaf";
         ctx.fillRect(x, y, x+size, y+this.BOX_HEIGHT);
     }
