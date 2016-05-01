@@ -26,9 +26,6 @@ class Platform{
       else if(locX < this.size / 2) {
           locX = this.size / 2;
       }
-      else{
-          //do nothing
-      }
 
       locX = locX - (ctx.canvas.width / 5) / 2;
 
@@ -52,28 +49,8 @@ function init() {
     // autosize canvas to window size
     ctx.canvas.width  = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
-
-    //create new platform and draw it
-    var platform = new Platform(mouseX - (ctx.canvas.width / 5) / 2, ctx.canvas.width / 5, ctx);
-    platform.draw(ctx);
-
-    update(canvas, ctx, mouseX, platform, bricks);
-}
-
-function update(canvas, ctx, mouseX, platform, bricks){
-
-    setInterval(function () {
-      document.onmousemove = function(e){
-        mouseX = e.clientX;
-      }
-
-      //clear the canvas
-      ctx.clearRect(0,0,canvas.width, canvas.height);
-
-      //draw platform
-      platform.update(ctx, mouseX);
-
-      // draw all the bricks
+    
+    // draw all the bricks
       for (y = 0; y < numOfRows; y++) {
           for (x = 0; x < widthDivisor; x++) {
               var b = new Brick(1, x * (ctx.canvas.width / widthDivisor), (ctx.canvas.height / widthDivisor) + (y * (ctx.canvas.height / heightDivisor)), ctx);
@@ -81,9 +58,27 @@ function update(canvas, ctx, mouseX, platform, bricks){
               bricks.push(b);
           }
       }
-      //console.log("total number of bricks = " + bricks.length);
-    }, 17);
+    
+    //create new platform and draw it
+    var platform = new Platform(mouseX - (ctx.canvas.width / 5) / 2, ctx.canvas.width / 5, ctx);
+    platform.draw(ctx);
 
+    setInterval( function() { update(canvas, ctx, mouseX, platform, bricks) }, 17);
+}
+
+function update(canvas, ctx, mouseX, platform, bricks){
+      //clear the canvas
+      ctx.clearRect(0,0,canvas.width, canvas.height);
+
+      // update platform
+      document.onmousemove = function(e){
+        mouseX = e.clientX;
+      }
+      platform.update(ctx, mouseX);
+
+      // update bricks
+      for (var b of bricks)
+          b.update(ctx);
 }
 
 function Brick(health, x, y, ctx) {
@@ -99,6 +94,18 @@ function Brick(health, x, y, ctx) {
     //functions
     this.draw = function (ctx){
         // fill with color
+        ctx.rect(this.xPosition, this.yPosition, this.width, this.height)
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.xPosition, this.yPosition, this.width, this.height);
+        // add stroke
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "black";
+        ctx.stroke();
+    }
+    
+    this.update = function(ctx){
+        
+        // create brick, fill it with its color
         ctx.rect(this.xPosition, this.yPosition, this.width, this.height)
         ctx.fillStyle = this.color;
         ctx.fillRect(this.xPosition, this.yPosition, this.width, this.height);
