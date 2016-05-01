@@ -11,8 +11,8 @@ class Platform{
       ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
     }
 
-    update(ctx, evt){
-      this.x = evt.clientX;
+    update(ctx){
+      this.x = event.clientX;
       ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
     }
 
@@ -21,24 +21,22 @@ function init(evt) {
   var canvas = document.getElementById('game'),
       ctx = canvas.getContext('2d');
 
-    //generate a random number for spawning the platform
-    var rand = Math.random() * 100;
-    rand = Math.round(rand);
-    rand = rand / 100
-
     // autosize canvas to window size
     ctx.canvas.width  = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
 
     //create new platform and draw it
-    var platform = new Platform(ctx.canvas.width * rand, ctx.canvas.width / 5);
+    var platform = new Platform(canvas.width / 2, ctx.canvas.width / 5);
     platform.draw(ctx);
 
     setInterval(function () {
-      ctx.clearRect(0,0,canvas.width, canvas.height);
-      platform.update(ctx, evt);
-    }, 1);
+      update(platform, ctx);
+    }, 30);
+}
+
+function update(platform, ctx){
+      platform.update(ctx);
 }
 
 document.addEventListener("DOMContentLoaded", init, false);
-window.addEventListener('mousemove', init, false);
+//window.addEventListener('mousemove', update, false);
