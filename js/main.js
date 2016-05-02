@@ -65,8 +65,8 @@ class Platform {
         this.x = locX;
         this.size = size;
         //set default variables
-        this.y = ctx.canvas.height - (ctx.canvas.height / 10);
-        this.boxHeight = window.innerHeight / 25;
+        this.y = ctx.canvas.height - (ctx.canvas.height / widthDivisor);
+        this.boxHeight = window.innerHeight / heightDivisor;
     }
 
     draw(ctx) {
@@ -82,8 +82,7 @@ class Platform {
         } else if (this.x < this.size / 2) {
             this.x = this.size / 2;
         }
-        this.x = this.x - (ctx.canvas.width / 10) / 2;
-        this.x = this.x - (ctx.canvas.width / 5) / 2;
+        this.x = this.x - (ctx.canvas.width / widthDivisor) / 2;
         ctx.fillStyle = PLATFORMCOLOR;
         ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
     }
