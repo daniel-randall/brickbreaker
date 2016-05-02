@@ -59,7 +59,7 @@ class Ball {
             this.velX = this.velX * -1;
         }
 
-        if(this.y = ctx.canvas.height - this.rad){
+        if(this.y == ctx.canvas.height - this.rad){
           this.velX = 0;
           this.velY = 0;
         }
