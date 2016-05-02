@@ -54,8 +54,14 @@ class Ball {
             this.velY = this.velY * -1;
         }
 
+        //check if ball is at the left and right bounds and if it is, invert the velocity
         if (this.x >= ctx.canvas.width - this.rad || this.x <= 0 + this.rad) {
             this.velX = this.velX * -1;
+        }
+
+        if(this.y = ctx.canvas.height - this.rad){
+          this.velX = 0;
+          this.velY = 0;
         }
 
         //update the location according to the velocity
