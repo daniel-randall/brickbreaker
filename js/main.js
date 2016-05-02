@@ -46,17 +46,12 @@ class Ball {
 
     update(ctx, platform) {
         //check if the ball is at the upper or lower bounds and if so, invert the velocity
-        if (/*this.y >= ctx.canvas.height - this.rad ||*/ this.y <= 0 + this.rad) {
+        if (this.y >= ctx.canvas.height - this.rad || this.y <= 0 + this.rad) {
             this.velY = this.velY * -1;
         }
         //check if the ball is hitting the platform and if so, invert the velocity
         else if (this.y >= (platform.y - platform.boxHeight) && this.x > (platform.x - this.rad) && this.x < (platform.x + platform.size + this.rad) && this.velY > 0) {
             this.velY = this.velY * -1;
-        }
-        //check if it is at the lower bounds and if so, freeze the ball
-        else if(this.y <= ctx.canvas.height - this.rad){
-          this.velX = 0;
-          this.velY = 0;
         }
 
         //check if ball is at the left and right bounds and if it is, invert the velocity
