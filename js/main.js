@@ -179,44 +179,4 @@ function init() {
     }, 17);
 }
 
-function update(canvas, ctx, mouseX, platform, bricks) {
-    //clear the canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    //update the platform location
-    platform.update(ctx, mouseX);
-
-    // update bricks
-    for (var b of bricks)
-        b.update(ctx);
-}
-
-function Brick(health, x, y, ctx) {
-    this.health = health;
-    this.xPosition = x;
-    this.yPosition = y;
-    this.color = 'hsl(' + 360 * Math.random() + ', 75%, 60%)'; // random color, same saturation and intensity
-
-    // constant for all bricks
-    this.width = ctx.canvas.width / widthDivisor;
-    this.height = ctx.canvas.height / heightDivisor;
-
-    //functions
-    this.draw = function (ctx) {
-        // fill with color
-        ctx.rect(this.xPosition, this.yPosition, this.width, this.height)
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.xPosition, this.yPosition, this.width, this.height);
-        // add stroke
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = "black";
-        ctx.stroke();
-    }
-
-    this.update = function (ctx) {
-        ctx.beginPath();
-        this.draw(ctx);
-    }
-}
-
 document.addEventListener("DOMContentLoaded", init, false);
