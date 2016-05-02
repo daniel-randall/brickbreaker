@@ -1,3 +1,6 @@
+// consts for color
+const PLATFORMCOLOR = "#FFFFFF";
+
 // consts for brick stuff
 const widthDivisor = 10;
 const heightDivisor = 20;
@@ -58,8 +61,8 @@ class Ball{
   }
 }
 
-class Platform{
-    constructor(locX, size, ctx){
+class Platform {
+    constructor(locX, size, ctx) {
         this.x = locX;
         this.size = size;
         //set default variables
@@ -67,25 +70,28 @@ class Platform{
         this.boxHeight = window.innerHeight / 25;
     }
 
-    draw(ctx){
-      ctx.fillStyle = "#000000";
-      ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
+    draw(ctx) {
+        ctx.fillStyle = PLATFORMCOLOR;
+        ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
     }
 
-    update(ctx, mouseX){
-      this.x = mouseX;
+    update(ctx, mouseX) {
+        this.x = mouseX;
 
-      if(this.x > ctx.canvas.width - (this.size / 2)) {
-          this.x = ctx.canvas.width - (this.size / 2);
-      }
-      else if(this.x < this.size / 2) {
-          this.x = this.size / 2;
-      }
+        if (this.x > ctx.canvas.width - (this.size / 2)) {
+            this.x = ctx.canvas.width - (this.size / 2);
+        } else if (this.x < this.size / 2) {
+            this.x = this.size / 2;
+        }
 
+<<<<<<< HEAD
       this.x = this.x - (ctx.canvas.width / 10) / 2;
+=======
+        this.x = this.x - (ctx.canvas.width / 5) / 2;
+>>>>>>> f0677f3fa909353edd991cc6e4a8e4fe7f95f1e0
 
-      ctx.fillStyle = "#000000";
-      ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
+        ctx.fillStyle = PLATFORMCOLOR;
+        ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
     }
 
 }
@@ -143,22 +149,23 @@ function init() {
     var mouseX = ctx.canvas.width / 2;
 
     // autosize canvas to window size
-    ctx.canvas.width  = window.innerWidth;
+    ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
 
     // draw all the bricks
-      for (y = 0; y < numOfRows; y++) {
-          for (x = 0; x < widthDivisor; x++) {
-              var b = new Brick(1, x * (ctx.canvas.width / widthDivisor), (ctx.canvas.height / widthDivisor) + (y * (ctx.canvas.height / heightDivisor)), ctx);
-              b.draw(ctx);
-              bricks.push(b);
-          }
-      }
+    for (y = 0; y < numOfRows; y++) {
+        for (x = 0; x < widthDivisor; x++) {
+            var b = new Brick(1, x * (ctx.canvas.width / widthDivisor), (ctx.canvas.height / widthDivisor) + (y * (ctx.canvas.height / heightDivisor)), ctx);
+            b.draw(ctx);
+            bricks.push(b);
+        }
+    }
 
     //create new platform and draw it
     var platform = new Platform(ctx.canvas.width / 2, ctx.canvas.width / 10, ctx);
     platform.draw(ctx);
 
+<<<<<<< HEAD
     //spawn a ball
     var ball = new Ball(ctx.canvas.width / 2, ctx);
     ball.spawn(ctx);
@@ -169,6 +176,54 @@ function init() {
       }
       update(canvas, ctx, mouseX, platform, bricks, ball)
     }, 1);
+=======
+    setInterval(function () {
+        document.onmousemove = function (e) {
+            mouseX = e.clientX;
+        }
+        update(canvas, ctx, mouseX, platform, bricks)
+    }, 17);
+}
+
+function update(canvas, ctx, mouseX, platform, bricks) {
+    //clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    //update the platform location
+    platform.update(ctx, mouseX);
+
+    // update bricks
+    for (var b of bricks)
+        b.update(ctx);
+}
+
+function Brick(health, x, y, ctx) {
+    this.health = health;
+    this.xPosition = x;
+    this.yPosition = y;
+    this.color = 'hsl(' + 360 * Math.random() + ', 75%, 60%)'; // random color, same saturation and intensity
+
+    // constant for all bricks
+    this.width = ctx.canvas.width / widthDivisor;
+    this.height = ctx.canvas.height / heightDivisor;
+
+    //functions
+    this.draw = function (ctx) {
+        // fill with color
+        ctx.rect(this.xPosition, this.yPosition, this.width, this.height)
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.xPosition, this.yPosition, this.width, this.height);
+        // add stroke
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "black";
+        ctx.stroke();
+    }
+
+    this.update = function (ctx) {
+        ctx.beginPath();
+        this.draw(ctx);
+    }
+>>>>>>> f0677f3fa909353edd991cc6e4a8e4fe7f95f1e0
 }
 
 document.addEventListener("DOMContentLoaded", init, false);
