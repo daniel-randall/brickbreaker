@@ -38,8 +38,10 @@ class Ball {
         }
 
         //set the velocity relative to the width and height of the canvas; multiply by randNum for some randomness
-        this.velX = ctx.canvas.width / velocityDivisor * randNum;
-        this.velY = ctx.canvas.height / velocityDivisor * Math.abs(randNum);
+        this.velX = (ctx.canvas.width / velocityDivisor) * randNum;
+        this.velY = (ctx.canvas.height / velocityDivisor) * Math.abs(randNum);
+        console.log(this.velY);
+        console.log(this.velX);
     }
 
     update(ctx, platform) {
