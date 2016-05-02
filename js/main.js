@@ -5,7 +5,7 @@ const PLATFORMCOLOR = "#FFFFFF";
 const widthDivisor = 10;
 const heightDivisor = 20;
 const numOfRows = 5;
-const velocityDivisor = -500;
+const velocityDivisor = -250;
 
 class Ball{
   constructor(locX, ctx){
@@ -83,15 +83,10 @@ class Platform {
         } else if (this.x < this.size / 2) {
             this.x = this.size / 2;
         }
-
-<<<<<<< HEAD
       this.x = this.x - (ctx.canvas.width / 10) / 2;
-=======
-        this.x = this.x - (ctx.canvas.width / 5) / 2;
->>>>>>> f0677f3fa909353edd991cc6e4a8e4fe7f95f1e0
-
-        ctx.fillStyle = PLATFORMCOLOR;
-        ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
+      this.x = this.x - (ctx.canvas.width / 5) / 2;
+      ctx.fillStyle = PLATFORMCOLOR;
+      ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
     }
 
 }
@@ -165,7 +160,6 @@ function init() {
     var platform = new Platform(ctx.canvas.width / 2, ctx.canvas.width / 10, ctx);
     platform.draw(ctx);
 
-<<<<<<< HEAD
     //spawn a ball
     var ball = new Ball(ctx.canvas.width / 2, ctx);
     ball.spawn(ctx);
@@ -176,7 +170,7 @@ function init() {
       }
       update(canvas, ctx, mouseX, platform, bricks, ball)
     }, 1);
-=======
+
     setInterval(function () {
         document.onmousemove = function (e) {
             mouseX = e.clientX;
@@ -223,7 +217,6 @@ function Brick(health, x, y, ctx) {
         ctx.beginPath();
         this.draw(ctx);
     }
->>>>>>> f0677f3fa909353edd991cc6e4a8e4fe7f95f1e0
 }
 
 document.addEventListener("DOMContentLoaded", init, false);
