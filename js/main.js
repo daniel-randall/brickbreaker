@@ -6,7 +6,7 @@ const BALLCOLOR = "#cd2121";
 const widthDivisor = 10;
 const heightDivisor = 20;
 const numOfRows = 5;
-const velocityDivisor = -300;
+const velocityDivisor = -200;
 const ballLocDivisor = 5;
 const ballSize = 25;
 
