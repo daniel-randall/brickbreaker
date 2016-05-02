@@ -7,58 +7,57 @@ const heightDivisor = 20;
 const numOfRows = 5;
 const velocityDivisor = -250;
 
-class Ball{
-  constructor(locX, ctx){
-    this.x = locX;
-    //set initial y and size values
-    this.y = ctx.canvas.height - (ctx.canvas.height / 5);
-    this.rad = 25;
-    this.velX = 0;
-    this.velY = 0;
-  }
-
-  spawn(ctx){
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.rad, 0,2*Math.PI);
-    ctx.fillStyle = "#cd2121";
-    ctx.fill();
-    ctx.stroke();
-
-    //get a random number, negative one or positive one
-    var randNum = Math.random();
-    if (randNum <= .5){
-      randNum = -1;
-    }
-    else{
-      randNum = 1;
-    }
-    this.velX = ctx.canvas.width / velocityDivisor * randNum;
-    this.velY = ctx.canvas.height / velocityDivisor;
-  }
-
-  update(ctx, bricks, platform){
-    //check if the ball is at the upper or lower bounds
-    if(this.y >= ctx.canvas.height - this.rad || this.y <= 0 + this.rad){
-      this.velY = this.velY * -1;
-    }
-    else if(this.y >= (platform.y - platform.boxHeight) && this.x > (platform.x - this.rad) && this.x < (platform.x + platform.size + this.rad) && this.velY > 0){
-      this.velY = this.velY * -1;
+class Ball {
+    constructor(locX, ctx) {
+        this.x = locX;
+        //set initial y and size values
+        this.y = ctx.canvas.height - (ctx.canvas.height / 5);
+        this.rad = 25;
+        this.velX = 0;
+        this.velY = 0;
     }
 
-    if(this.x >= ctx.canvas.width - this.rad || this.x <= 0 + this.rad){
-      this.velX = this.velX * -1;
+    spawn(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.rad, 0, 2 * Math.PI);
+        ctx.fillStyle = "#cd2121";
+        ctx.fill();
+        ctx.stroke();
+
+        //get a random number, negative one or positive one
+        var randNum = Math.random();
+        if (randNum <= .5) {
+            randNum = -1;
+        } else {
+            randNum = 1;
+        }
+        this.velX = ctx.canvas.width / velocityDivisor * randNum;
+        this.velY = ctx.canvas.height / velocityDivisor;
     }
 
-    //update the location according to the velocity
-    this.x += this.velX;
-    this.y += this.velY;
+    update(ctx, platform) {
+        //check if the ball is at the upper or lower bounds
+        if (this.y >= ctx.canvas.height - this.rad || this.y <= 0 + this.rad) {
+            this.velY = this.velY * -1;
+        } else if (this.y >= (platform.y - platform.boxHeight) && this.x > (platform.x - this.rad) && this.x < (platform.x + platform.size + this.rad) && this.velY > 0) {
+            this.velY = this.velY * -1;
+        }
 
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.rad, 0,2*Math.PI);
-    ctx.fillStyle = "#cd2121";
-    ctx.fill();
-    ctx.stroke();
-  }
+        if (this.x >= ctx.canvas.width - this.rad || this.x <= 0 + this.rad) {
+            this.velX = this.velX * -1;
+        }
+
+        //update the location according to the velocity
+        this.x += this.velX;
+        this.y += this.velY;
+
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.rad, 0, 2 * Math.PI);
+        ctx.fillStyle = "#cd2121";
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }
 }
 
 class Platform {
@@ -83,10 +82,10 @@ class Platform {
         } else if (this.x < this.size / 2) {
             this.x = this.size / 2;
         }
-      this.x = this.x - (ctx.canvas.width / 10) / 2;
-      this.x = this.x - (ctx.canvas.width / 5) / 2;
-      ctx.fillStyle = PLATFORMCOLOR;
-      ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
+        this.x = this.x - (ctx.canvas.width / 10) / 2;
+        this.x = this.x - (ctx.canvas.width / 5) / 2;
+        ctx.fillStyle = PLATFORMCOLOR;
+        ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
     }
 
 }
@@ -102,7 +101,7 @@ function Brick(health, x, y, ctx) {
     this.height = ctx.canvas.height / heightDivisor;
 
     //functions
-    this.draw = function (ctx){
+    this.draw = function (ctx) {
         // fill with color
         ctx.rect(this.xPosition, this.yPosition, this.width, this.height)
         ctx.fillStyle = this.color;
@@ -113,24 +112,24 @@ function Brick(health, x, y, ctx) {
         ctx.stroke();
     }
 
-    this.update = function(ctx){
+    this.update = function (ctx) {
         ctx.beginPath();
         this.draw(ctx);
     }
 }
 
-function update(canvas, ctx, mouseX, platform, bricks, ball){
-      //clear the canvas
-      ctx.clearRect(0,0,canvas.width, canvas.height);
+function update(canvas, ctx, mouseX, platform, bricks, ball) {
+    //clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      //update the platform location
-      platform.update(ctx, mouseX);
+    //update the platform location
+    platform.update(ctx, mouseX);
+    
+    ball.update(ctx, platform);
 
-      ball.update(ctx, bricks, platform);
-
-      // update bricks
-      for (var b of bricks)
-          b.update(ctx);
+    // update bricks
+    for (var b of bricks)
+        b.update(ctx);
 }
 
 function init() {
@@ -164,18 +163,11 @@ function init() {
     var ball = new Ball(ctx.canvas.width / 2, ctx);
     ball.spawn(ctx);
 
-    setInterval( function() {
-      document.onmousemove = function(e){
-        mouseX = e.clientX;
-      }
-      update(canvas, ctx, mouseX, platform, bricks, ball)
-    }, 1);
-
     setInterval(function () {
         document.onmousemove = function (e) {
             mouseX = e.clientX;
         }
-        update(canvas, ctx, mouseX, platform, bricks)
+        update(canvas, ctx, mouseX, platform, bricks, ball)
     }, 17);
 }
 
