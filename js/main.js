@@ -31,15 +31,15 @@ class Ball {
         var randNum = Math.random();
         if (randNum <= .5) {
             randNum = -1;
-            randNum = randNum - Math.random();
+            randNum = randNum + Math.random();
         } else {
             randNum = 1;
-            randNum = randNum + Math.random();
+            randNum = randNum - Math.random();
         }
 
         //set the velocity relative to the width and height of the canvas; multiply by randNum for some randomness
         this.velX = (ctx.canvas.width / velocityDivisor) * randNum;
-        this.velY = (ctx.canvas.height / velocityDivisor) * Math.abs(randNum);
+        this.velY = (ctx.canvas.height / velocityDivisor);
         console.log(this.velY);
         console.log(this.velX);
     }
