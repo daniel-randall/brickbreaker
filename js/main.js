@@ -71,14 +71,28 @@ class Ball {
 
         // collide with bricks
         for (var b of bricks) {
-            // same y
+            // bottom or top of ball hit
             if ((this.y - this.rad <= b.yPosition + b.height && this.prevY - this.rad >= b.yPosition + b.height) ||
                 (this.y + this.rad >= b.yPosition && this.prevY + this.rad <= b.yPosition)) {
-                // same x
                 if (b.xPosition <= this.x && this.x <= b.xPosition + b.width) {
                     // kill block and reverse velocity
                     b.hit(ctx, b, bricks);
                     this.velY *= -1;
+                }
+            }
+            
+            // left or right side of ball hit a block
+            // LEFT = this.x - this.rad; LEFTP = this.prevX - this.rad; -------> LEFT < LEFTP
+            // LEFT <= b.xPosition + b.width <= LEFTP
+            // RIGHT = this.x + this.rad; RIGHTP = this.prevx + this.rad; -------> RIGHTP < RIGHT
+            // RIGHTP  <= b.xPosition <= RIGHT
+            // corner collisions fix here
+            if ((this.x - this.rad <= b.xPosition + b.width && b.xPosition + b.width <= this.prevX - this.rad) || 
+                (this.prevX + this.rad <= b.xPosition && b.xPosition <= this.x + this.rad)) {
+                // b.yPosition <= this.y <= b.yPosition + b.height
+                if (b.yPosition <= this.y && this.y <= b.yPosition + b.height) {
+                    b.hit(ctx, b, bricks);
+                    this.velX *= -1;
                 }
             }
         }
