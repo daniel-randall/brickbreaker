@@ -50,32 +50,33 @@ class Ball {
         // update prevX/prevY
         this.prevX = this.x;
         this.prevY = this.y;
-        
+
         //check if the ball is at the upper or lower bounds and if so, invert the velocity
         if (this.y >= ctx.canvas.height - this.rad || this.y <= 0 + this.rad) {
             this.velY = this.velY * -1;
         }
         //check if the ball is hitting the platform and if so, invert the velocity
         else if (this.y >= (platform.y - platform.boxHeight) && this.x > (platform.x - this.rad) && this.x < (platform.x + platform.size + this.rad) && this.velY > 0) {
-            this.velY = this.velY * -1;
+            this.velY *= -1;
         }
 
         //check if ball is at the left and right bounds and if it is, invert the velocity
         if (this.x >= ctx.canvas.width - this.rad || this.x <= 0 + this.rad) {
-            this.velX = this.velX * -1;
+            this.velX *= -1;
         }
-        
+
         //update the location according to the velocity
         this.x += this.velX;
         this.y += this.velY;
-        
+
         // collide with bricks
         for (var b of bricks) {
-            // same y?
+            // same y
             if ((this.y - this.rad <= b.yPosition + b.height && this.prevY - this.rad >= b.yPosition + b.height) ||
-                (this.y + this.rad >= b.yPosition && this.prevY + this.rad <= b.yPosition)){
-                // same x?
-                if (b.xPosition <= this.x && b.xPosition + b.width >= this.x) {
+                (this.y + this.rad >= b.yPosition && this.prevY + this.rad <= b.yPosition)) {
+                // same x
+                if (b.xPosition <= this.x && this.x <= b.xPosition + b.width) {
+                    // kill block and reverse velocity
                     b.hit(ctx, b, bricks);
                     this.velY *= -1;
                 }
@@ -149,7 +150,7 @@ function Brick(health, x, y, ctx) {
         ctx.beginPath();
         this.draw(ctx);
     }
-    
+
     this.hit = function (ctx, b, bricks) {
         health--;
         if (health <= 0) {
@@ -158,8 +159,7 @@ function Brick(health, x, y, ctx) {
                 if (bricks[i] == b)
                     bricks.splice(i, 1);
             }
-        }
-        else {
+        } else {
             this.color = 'hsl(' + 360 * Math.random() + ', 75%, 60%)';
         }
     }
