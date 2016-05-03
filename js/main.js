@@ -62,7 +62,7 @@ class Ball {
         // collide with bricks
         for (var b of bricks) {
             // same y?
-            if (b.yPosition + b.height <= this.y + this.rad && b.yPosition > this.y - this.rad){
+            if (b.yPosition + b.height <= this.y + (2 * this.rad) && b.yPosition > this.y - (2 * this.rad)){
                 // same x? corner of ball bug would be here
                 if (b.xPosition <= this.x && b.xPosition + b.width >= this.x) {
                     b.hit(ctx, b, bricks);
@@ -146,6 +146,7 @@ function Brick(health, x, y, ctx) {
     this.hit = function (ctx, b, bricks) {
         health--;
         if (health <= 0) {
+            // remove b from bricks
             for (var i = 0; i < bricks.length; i++) {
                 if (bricks[i] == b)
                     bricks.splice(i, 1);
