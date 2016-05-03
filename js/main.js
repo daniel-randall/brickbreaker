@@ -18,6 +18,8 @@ class Ball {
         this.rad = ctx.canvas.height / ballDivisor;
         this.velX = 0;
         this.velY = 0;
+        this.prevX = null;
+        this.prevY = null;
     }
 
     spawn(ctx) {
@@ -45,6 +47,10 @@ class Ball {
     }
 
     update(ctx, platform, bricks) {
+        // update prevX/prevY
+        this.prevX = this.x;
+        this.prevY = this.y;
+        
         //check if the ball is at the upper or lower bounds and if so, invert the velocity
         if (this.y >= ctx.canvas.height - this.rad || this.y <= 0 + this.rad) {
             this.velY = this.velY * -1;
@@ -59,27 +65,22 @@ class Ball {
             this.velX = this.velX * -1;
         }
         
+        //update the location according to the velocity
+        this.x += this.velX;
+        this.y += this.velY;
+        
         // collide with bricks
         for (var b of bricks) {
             // same y?
-            if (b.yPosition + b.height <= this.y + (2 * this.rad) && b.yPosition > this.y - (2 * this.rad)){
-                // same x? corner of ball bug would be here
-                if (Math.round(b.xPosition) == Math.round(this.x) || Math.round(b.xPosition + b.width) == Math.round(this.x)) {
-                        console.log("called");
-                        b.hit(ctx, b, bricks);
-                        this.velX *= -1;
-                        break;
-                }
+            if ((this.y - this.rad <= b.yPosition + b.height && this.prevY - this.rad >= b.yPosition + b.height) ||
+                (this.y + this.rad >= b.yPosition && this.prevY + this.rad <= b.yPosition)){
+                // same x?
                 if (b.xPosition <= this.x && b.xPosition + b.width >= this.x) {
                     b.hit(ctx, b, bricks);
                     this.velY *= -1;
                 }
             }
         }
-        
-        //update the location according to the velocity
-        this.x += this.velX;
-        this.y += this.velY;
 
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.rad, 0, 2 * Math.PI);
