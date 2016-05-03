@@ -8,14 +8,14 @@ const heightDivisor = 20;
 const numOfRows = 5;
 const velocityDivisor = -100;
 const ballLocDivisor = 5;
-const ballSize = 25;
+const ballDivisor = 30;
 
 class Ball {
     constructor(locX, ctx) {
         this.x = locX;
         //set initial y and size values
         this.y = ctx.canvas.height - (ctx.canvas.height / ballLocDivisor);
-        this.rad = ballSize;
+        this.rad = ctx.canvas.height / ballDivisor;
         this.velX = 0;
         this.velY = 0;
     }
@@ -64,6 +64,12 @@ class Ball {
             // same y?
             if (b.yPosition + b.height <= this.y + (2 * this.rad) && b.yPosition > this.y - (2 * this.rad)){
                 // same x? corner of ball bug would be here
+                if (Math.round(b.xPosition) == Math.round(this.x) || Math.round(b.xPosition + b.width) == Math.round(this.x)) {
+                        console.log("called");
+                        b.hit(ctx, b, bricks);
+                        this.velX *= -1;
+                        break;
+                }
                 if (b.xPosition <= this.x && b.xPosition + b.width >= this.x) {
                     b.hit(ctx, b, bricks);
                     this.velY *= -1;
