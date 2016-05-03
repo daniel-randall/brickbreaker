@@ -44,7 +44,7 @@ class Ball {
         console.log(this.velX);
     }
 
-    update(ctx, platform) {
+    update(ctx, platform, bricks) {
         //check if the ball is at the upper or lower bounds and if so, invert the velocity
         if (this.y >= ctx.canvas.height - this.rad || this.y <= 0 + this.rad) {
             this.velY = this.velY * -1;
@@ -58,7 +58,19 @@ class Ball {
         if (this.x >= ctx.canvas.width - this.rad || this.x <= 0 + this.rad) {
             this.velX = this.velX * -1;
         }
-
+        
+        // collide with bricks
+        for (var b of bricks) {
+            // same y?
+            if (b.yPosition + b.height <= this.y + this.rad && b.yPosition > this.y - this.rad){
+                // same x? corner of ball bug would be here
+                if (b.xPosition <= this.x && b.xPosition + b.width >= this.x) {
+                    b.hit(ctx, b, bricks);
+                    this.velY *= -1;
+                }
+            }
+        }
+        
         //update the location according to the velocity
         this.x += this.velX;
         this.y += this.velY;
@@ -130,6 +142,19 @@ function Brick(health, x, y, ctx) {
         ctx.beginPath();
         this.draw(ctx);
     }
+    
+    this.hit = function (ctx, b, bricks) {
+        health--;
+        if (health <= 0) {
+            for (var i = 0; i < bricks.length; i++) {
+                if (bricks[i] == b)
+                    bricks.splice(i, 1);
+            }
+        }
+        else {
+            this.color = 'hsl(' + 360 * Math.random() + ', 75%, 60%)';
+        }
+    }
 }
 
 function update(canvas, ctx, mouseX, platform, bricks, ball) {
@@ -140,7 +165,7 @@ function update(canvas, ctx, mouseX, platform, bricks, ball) {
     platform.update(ctx, mouseX);
 
     //update the ball location
-    ball.update(ctx, platform);
+    ball.update(ctx, platform, bricks);
 
     // update bricks
     for (var b of bricks)
