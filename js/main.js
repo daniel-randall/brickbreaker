@@ -6,9 +6,10 @@ const BALLCOLOR = "#cd2121";
 const widthDivisor = 10;
 const heightDivisor = 20;
 const numOfRows = 5;
-const velocityDivisor = -100;
+const velocityDivisor = -200;
 const ballLocDivisor = 5;
 const ballDivisor = 30;
+const platformBounceMultiplier = .1;
 
 class Ball {
     constructor(locX, ctx) {
@@ -49,6 +50,23 @@ class Ball {
         }
         //check if the ball is hitting the platform and if so, invert the velocity
         else if (this.y >= (platform.y - platform.boxHeight) && this.x > (platform.x) && this.x < (platform.x + platform.size) && this.velY > 0) {
+          var whereHit = this.x - platform.center;
+          var whereHitFrac = whereHit / (platform.size / 2);
+          //Implementation for better platform reflections. It reflects differently depending on where it hits on the platform.
+          //if the ball hits the left side of the platform
+          if(whereHitFrac < -.5){
+            this.velX = ctx.canvas.width / velocityDivisor * Math.abs(whereHitFrac);
+          }
+          //if the ball hits the right third of the platform
+          else if(whereHit > .5){
+            this.velX = ctx.canvas.width / velocityDivisor * -1 * Math.abs(whereHitFrac);
+          }
+          //if the ball hits the center third of the platform
+          else{
+            this.velX = ctx.canvas.width / velocityDivisor * Math.abs(whereHitFrac);
+          }
+
+          //invert the Y velocity when it hits the platform
           this.velY = this.velY * -1;
         }
 
