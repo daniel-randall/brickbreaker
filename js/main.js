@@ -9,7 +9,6 @@ const numOfRows = 5;
 const velocityDivisor = -100;
 const ballLocDivisor = 5;
 const ballDivisor = 30;
-const platformBounceMultiplier = .1;
 
 class Ball {
     constructor(locX, ctx) {
