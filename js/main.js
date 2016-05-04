@@ -40,8 +40,6 @@ class Ball {
         //set the velocity relative to the width and height of the canvas; multiply by randNum for some randomness
         this.velX = (ctx.canvas.width / velocityDivisor) * randNum;
         this.velY = (ctx.canvas.height / velocityDivisor);
-        console.log(this.velY);
-        console.log(this.velX);
     }
 
     update(ctx, platform, bricks) {
@@ -50,15 +48,15 @@ class Ball {
             this.velY = this.velY * -1;
         }
         //check if the ball is hitting the platform and if so, invert the velocity
-        else if (this.y >= (platform.y - platform.boxHeight) && this.x > (platform.x - this.rad) && this.x < (platform.x + platform.size + this.rad) && this.velY > 0) {
-            this.velY = this.velY * -1;
+        else if (this.y >= (platform.y - platform.boxHeight) && this.x > (platform.x) && this.x < (platform.x + platform.size) && this.velY > 0) {
+          this.velY = this.velY * -1;
         }
 
         //check if ball is at the left and right bounds and if it is, invert the velocity
         if (this.x >= ctx.canvas.width - this.rad || this.x <= 0 + this.rad) {
             this.velX = this.velX * -1;
         }
-        
+
         // collide with bricks
         for (var b of bricks) {
             // same y?
@@ -76,7 +74,7 @@ class Ball {
                 }
             }
         }
-        
+
         //update the location according to the velocity
         this.x += this.velX;
         this.y += this.velY;
@@ -96,7 +94,8 @@ class Platform {
         this.size = size;
         //set default variables
         this.y = ctx.canvas.height - (ctx.canvas.height / widthDivisor);
-        this.boxHeight = window.innerHeight / heightDivisor;
+        this.boxHeight = window.innerHeight / heightDivisor / 3;
+        this.center = this.x + (this.size / 2);
     }
 
     draw(ctx) {
@@ -118,6 +117,7 @@ class Platform {
         this.x = this.x - (ctx.canvas.width / widthDivisor) / 2;
         ctx.fillStyle = PLATFORMCOLOR;
         ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
+        this.center = this.x + (this.size / 2);
     }
 
 }
@@ -148,7 +148,7 @@ function Brick(health, x, y, ctx) {
         ctx.beginPath();
         this.draw(ctx);
     }
-    
+
     this.hit = function (ctx, b, bricks) {
         health--;
         if (health <= 0) {
