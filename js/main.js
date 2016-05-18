@@ -9,6 +9,46 @@ const numOfRows = 5;
 const velocityDivisor = -100;
 const ballLocDivisor = 5;
 const ballDivisor = 30;
+const DefaultLives = 3;
+
+//game represents the ball, bricks, player, and canvas
+class Game{
+  constructor(canvas, player, ball, bricks){
+    this.canvas = canvas;
+    this.ctx = canvas.getContext("2d");
+    this.player = player;
+    this.ball = ball;
+    this.bricks = bricks;
+  }
+  //draw a new frame; basically the update function
+  drawFrame(player, mouseX){
+    //clear the canvas
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    //update the platform location
+    player.platform.update(this.ctx, mouseX);
+
+    //update the ball location
+    this.ball.update(this.ctx, player.platform, this.bricks);
+
+    // update bricks
+    for (var b of this.bricks)
+        b.update(ctx);
+  }
+}
+
+//player represents the platform
+class Player{
+  constructor(platform, mouseX){
+    this.platform = platform;
+    this.score = 0;
+    this.lives = DefaultLives;
+    this.mouseX = mouseX;
+  }
+  loseLife(){
+    this.lives = this.lives - 1;
+  }
+}
 
 class Ball {
     constructor(locX, ctx) {
@@ -197,11 +237,22 @@ function update(canvas, ctx, mouseX, platform, bricks, ball) {
 }
 
 function init() {
+  //figure out where the canvas is
+  var canvas = document.getElementById('game'),
+      ctx = canvas.getContext('2d');
+
+  //create a new game
+  var game = new Game(canvas,
+                      new Player(
+                          new Platform(ctx.canvas.width / 2, ctx.canvas.width / 10, ctx),
+                          mouseX = 0
+                      ),
+                      new Ball(ctx.canvas.width / 2, ctx),
+                      bricks = []
+                    );
+
     // class variables
     var bricks = [];
-
-    var canvas = document.getElementById('game'),
-        ctx = canvas.getContext('2d');
 
     // autosize canvas to window size
     ctx.canvas.width = window.innerWidth;
