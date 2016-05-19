@@ -13,46 +13,104 @@ const DefaultLives = 3;
 
 //game represents the ball, bricks, player, and canvas
 class Game{
-  constructor(canvas, player, ball, bricks){
+  constructor(canvas){
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
-    this.player = player;
-    this.ball = ball;
-    this.bricks = bricks;
+
+    // autosize canvas to window size
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+
+    //create new player (platform)
+    this.player = new Player();
+
+    //create a new platform
+    this.platform = new Platform(this.ctx);
+
+    //create a new ball
+    this.ball = new Ball(this.ctx);
+
+    //set up bricks
+    this.bricks = [];
+    // draw all the bricks
+    for (var y = 0; y < numOfRows; y++) {
+        for (var x = 0; x < widthDivisor; x++) {
+            var b = new Brick(1, x * (this.canvas.width / widthDivisor), (this.canvas.height / widthDivisor) + (y * (this.canvas.height / heightDivisor)), this.ctx);
+            b.draw(this.ctx);
+            this.bricks.push(b);
+        }
+    }
+
+    //create a game state to set different behaviors
+    this.state = "beginning";
   }
+
   //draw a new frame; basically the update function
-  drawFrame(player, mouseX){
+  drawFrame(mouseX){
     //clear the canvas
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     //update the platform location
-    player.platform.update(this.ctx, mouseX);
+    this.platform.update(this.ctx, mouseX);
 
     //update the ball location
-    this.ball.update(this.ctx, player.platform, this.bricks);
+    this.ball.update(this.ctx, this.platform, this.bricks);
 
     // update bricks
     for (var b of this.bricks)
-        b.update(ctx);
+        b.update(this.ctx);
   }
 }
 
 //player represents the platform
 class Player{
-  constructor(platform, mouseX){
-    this.platform = platform;
+  constructor(){
     this.score = 0;
     this.lives = DefaultLives;
-    this.mouseX = mouseX;
+    this.mouseX = window.innerWidth / 2;
   }
   loseLife(){
     this.lives = this.lives - 1;
   }
 }
 
+class Platform {
+    constructor(ctx) {
+        this.x = ctx.canvas.height / 2;
+        this.size = ctx.canvas.width / widthDivisor;
+        //set default variables
+        this.y = ctx.canvas.height - (ctx.canvas.height / widthDivisor);
+        this.boxHeight = ctx.canvas.height / heightDivisor / 3;
+        this.center = this.x + (this.size / 2);
+    }
+
+    draw(ctx) {
+        ctx.fillStyle = PLATFORMCOLOR;
+        ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
+    }
+
+    update(ctx, mouseX) {
+        this.x = mouseX;
+
+        //check if the platform is at the canvas bounds
+        if (this.x > ctx.canvas.width - (this.size / 2)) {
+            this.x = ctx.canvas.width - (this.size / 2);
+        } else if (this.x < 0 + this.size / 2) {
+            this.x = this.size / 2;
+        }
+
+        //place the mouse in the middle of the platform
+        this.x = this.x - (ctx.canvas.width / widthDivisor) / 2;
+        ctx.fillStyle = PLATFORMCOLOR;
+        ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
+        this.center = this.x + (this.size / 2);
+    }
+
+}
+
 class Ball {
-    constructor(locX, ctx) {
-        this.x = locX;
+    constructor(ctx) {
+        this.x = ctx.canvas.width / 2;
         //set initial y and size values
         this.y = ctx.canvas.height - (ctx.canvas.height / ballLocDivisor);
         this.rad = ctx.canvas.height / ballDivisor;
@@ -145,40 +203,6 @@ class Ball {
     }
 }
 
-class Platform {
-    constructor(locX, size, ctx) {
-        this.x = locX;
-        this.size = size;
-        //set default variables
-        this.y = ctx.canvas.height - (ctx.canvas.height / widthDivisor);
-        this.boxHeight = window.innerHeight / heightDivisor / 3;
-        this.center = this.x + (this.size / 2);
-    }
-
-    draw(ctx) {
-        ctx.fillStyle = PLATFORMCOLOR;
-        ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
-    }
-
-    update(ctx, mouseX) {
-        this.x = mouseX;
-
-        //check if the platform is at the canvas bounds
-        if (this.x > ctx.canvas.width - (this.size / 2)) {
-            this.x = ctx.canvas.width - (this.size / 2);
-        } else if (this.x < 0 + this.size / 2) {
-            this.x = this.size / 2;
-        }
-
-        //place the mouse in the middle of the platform
-        this.x = this.x - (ctx.canvas.width / widthDivisor) / 2;
-        ctx.fillStyle = PLATFORMCOLOR;
-        ctx.fillRect(this.x, this.y, this.size, this.boxHeight);
-        this.center = this.x + (this.size / 2);
-    }
-
-}
-
 function Brick(health, x, y, ctx) {
     this.health = health;
     this.xPosition = x;
@@ -238,52 +262,28 @@ function update(canvas, ctx, mouseX, platform, bricks, ball) {
 
 function init() {
   //figure out where the canvas is
-  var canvas = document.getElementById('game'),
-      ctx = canvas.getContext('2d');
+  var canvas = document.getElementById('game');
 
-  //create a new game
-  var game = new Game(canvas,
-                      new Player(
-                          new Platform(ctx.canvas.width / 2, ctx.canvas.width / 10, ctx),
-                          mouseX = 0
-                      ),
-                      new Ball(ctx.canvas.width / 2, ctx),
-                      bricks = []
-                    );
+  //create a new game!
+  var game = new Game(canvas);
 
-    // class variables
-    var bricks = [];
-
-    // autosize canvas to window size
-    ctx.canvas.width = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
-
-    //set default mouse position to center
-    var mouseX = ctx.canvas.width / 2;
-
-    // draw all the bricks
-    for (y = 0; y < numOfRows; y++) {
-        for (x = 0; x < widthDivisor; x++) {
-            var b = new Brick(1, x * (ctx.canvas.width / widthDivisor), (ctx.canvas.height / widthDivisor) + (y * (ctx.canvas.height / heightDivisor)), ctx);
-            b.draw(ctx);
-            bricks.push(b);
-        }
-    }
+  //make variable for use of the mouse
+  var mouseX = game.player.mouseX;
 
     //create new platform and draw it
-    var platform = new Platform(ctx.canvas.width / 2, ctx.canvas.width / 10, ctx);
-    platform.draw(ctx);
+    game.platform.draw(game.ctx);
 
     //create and spawn a ball
-    var ball = new Ball(ctx.canvas.width / 2, ctx);
-    ball.spawn(ctx);
+    game.ball.spawn(game.ctx);
 
     //run update() every 1/60 of a second and pass along the current mouse position
     setInterval(function () {
-        document.onmousemove = function (e) {
-            mouseX = e.clientX;
+      //update the mouse locaiton
+      document.onmousemove = function (e) {
+          mouseX = e.clientX;
         }
-        update(canvas, ctx, mouseX, platform, bricks, ball)
+      game.player.mouseX = mouseX;
+      game.drawFrame(mouseX);
     }, 17);
 }
 
